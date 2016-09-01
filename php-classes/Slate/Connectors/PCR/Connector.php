@@ -11,6 +11,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
     // column maps
     public static $personForeignKeyName = 'student[alternate_id]';
     public static $studentColumns = [
+        // old PCR fields
         'alternate id' => 'ForeignKey',
         'student id' => 'StudentNumber',
         'student nickname' => 'PreferredName',
@@ -20,7 +21,19 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         'sex' => 'Gender',
         'year grad' => 'GraduationYear',
         'advisor first name' => 'AdvisorFirstName',
-        'advisor last name' => 'AdvisorLastName'
+        'advisor last name' => 'AdvisorLastName',
+
+        // new PCR fields
+        'Alternate Id' => 'ForeignKey',
+        'Student Id' => 'StudentNumber',
+        'Student Nickname' => 'PreferredName',
+        'Student First Name' => 'FirstName',
+        'Student Middle Name' => 'MiddleName',
+        'Student Last Name' => 'LastName',
+        'Sex' => 'Gender',
+        'Year Grad' => 'GraduationYear',
+        'Advisor First Name' => 'AdvisorFirstName',
+        'Advisor Last Name' => 'AdvisorLastName'
     ];
 
     // AbstractConnector overrides
