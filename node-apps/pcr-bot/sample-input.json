@@ -1,0 +1,12 @@
+{
+    "scn": "SchoolName",
+    "appid": "1",
+    "username": "CHANGE_ME",
+    "password": "CHANGE_ME",
+    "year": "current",
+    "reports": {
+        "students": "./students.csv",
+        "sections": "./sections.csv",
+        "schedule": "./schedule.csv"
+    }
+}

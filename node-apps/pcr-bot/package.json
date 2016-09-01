@@ -1,0 +1,11 @@
+{
+  "name": "pcr-bot",
+  "description": "Bot for slate to download CSV reports automatically.",
+  "version": "0.0.2",
+  "dependencies": {
+    "casperjs": "^1.1.0-beta3",
+    "optimist": "^0.6.1",
+    "http-mitm-proxy": "git://github.com/JarvusInnovations/node-http-mitm-proxy.git#master",
+    "phantomjs": "^2.1.7"
+  }
+}
