@@ -4,6 +4,10 @@ namespace Slate\Connectors\PCR;
 
 use SpreadsheetReader;
 use Emergence\Connectors\Job;
+use Emergence\Connectors\Exceptions\RemoteRecordInvalid;
+
+use Slate\Term;
+use Slate\Courses\Section;
 
 
 class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implements \Emergence\Connectors\ISynchronize
@@ -34,6 +38,21 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         'Year Grad' => 'GraduationYear',
         'Advisor First Name' => 'AdvisorFirstName',
         'Advisor Last Name' => 'AdvisorLastName'
+    ];
+
+    public static $sectionForeignKeyName = 'section_id';
+    public static $sectionColumns = [
+        // old PCR fields
+        'semester' => 'SemesterNumber',
+        'course name' => 'CourseTitle',
+        'short course name' => 'CourseCode',
+        'section capacity' => 'StudentsCapacity',
+        'course id' => 'CourseExternal',
+        'period code' => 'Schedule',
+        'department name' => 'DepartmentTitle',
+        'section' => 'SectionNumber',
+        'teacher first name' => 'TeacherFirstName',
+        'teacher last name' => 'TeacherLastName'
     ];
 
     // AbstractConnector overrides
@@ -111,5 +130,53 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         }
 
         return true;
+    }
+
+    protected static function _readSection($Job, array $row)
+    {
+        $row = parent::_readSection($Job, $row);
+
+        if (empty($row['SectionExternal']) && !empty($row['CourseExternal']) && !empty($row['SectionNumber'])) {
+            $row['SectionExternal'] = sprintf('%u:%u', $row['CourseExternal'], $row['SectionNumber']);
+        }
+
+        return $row;
+    }
+
+    protected static function _applySectionChanges(Job $Job, Term $MasterTerm, Section $Section, array $row, array &$results)
+    {
+        if (!empty($row['SemesterNumber'])) {
+            if (!$Term = Term::getByHandle('s'.substr($MasterTerm->Handle, 1).'-'.$row['SemesterNumber'])) {
+                throw new RemoteRecordInvalid(
+                    'term-not-found-for-semester-number',
+                    sprintf('Term not found for semester number "%s"', $row['SemesterNumber']),
+                    $row,
+                    $row['SemesterNumber']
+                );
+            }
+
+            // detect mergable adjacent terms
+            if ($Term && $Section->Term && ($Term->Right+1 == $Section->Term->Left || $Term->Left == $Section->Term->Right+1)) {
+                $ParentTerm = Term::getByWhere([
+                    'Left' => min($Term->Left, $Section->Term->Left) - 1,
+                    'Right' => max($Term->Right, $Section->Term->Right) + 1
+                ]);
+
+                if ($ParentTerm) {
+                    $Term = $ParentTerm;
+                }
+            }
+
+            // detect if existing course is set to a parent term
+            if ($Term && $Section->Term && ($Term->Left > $Section->Term->Left) && ($Term->Right < $Section->Term->Right) ) {
+                $Term = $Section->Term;
+            }
+
+            if ($Term) {
+                $Section->Term = $Term;
+            }
+        }
+
+        parent::_applySectionChanges($Job, $MasterTerm, $Section, $row, $results);
     }
 }
