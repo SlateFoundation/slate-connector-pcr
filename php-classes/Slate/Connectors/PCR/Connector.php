@@ -67,6 +67,18 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         'Teacher Last Name' => 'TeacherLastName'
     ];
 
+    public static $enrollmentColumns = [
+        // old PCR fields
+        'student id' => 'StudentNumber',
+        'course id' => 'CourseExternal',
+        'section' => 'SectionNumber',
+
+        // new PCR fields
+        'Student Id' => 'StudentNumber',
+        'Course Id' => 'CourseExternal',
+        'Section' => 'SectionNumber'
+    ];
+
     // AbstractConnector overrides
     public static $title = 'PCR';
     public static $connectorId = 'pcr';
@@ -150,6 +162,17 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
 
         if (empty($row['SectionExternal']) && !empty($row['CourseExternal']) && !empty($row['SectionNumber'])) {
             $row['SectionExternal'] = sprintf('%u:%u', $row['CourseExternal'], $row['SectionNumber']);
+        }
+
+        return $row;
+    }
+
+    protected static function _readEnrollment($Job, array $row)
+    {
+        $row = parent::_readEnrollment($Job, $row);
+
+        if (!empty($row['CourseExternal']) && !empty($row['SectionNumber'])) {
+            $row['_rest'] = [sprintf('%u:%u', $row['CourseExternal'], $row['SectionNumber'])];
         }
 
         return $row;
