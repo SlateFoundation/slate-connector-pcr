@@ -52,7 +52,19 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         'department name' => 'DepartmentTitle',
         'section' => 'SectionNumber',
         'teacher first name' => 'TeacherFirstName',
-        'teacher last name' => 'TeacherLastName'
+        'teacher last name' => 'TeacherLastName',
+
+        // new PCR fields
+        'Semester' => 'SemesterNumber',
+        'Course Name' => 'CourseTitle',
+        'Short Course Name' => 'CourseCode',
+        'Section Capacity' => 'StudentsCapacity',
+        'Course Id' => 'CourseExternal',
+        'Period Code' => 'Schedule',
+        'Department Name' => 'DepartmentTitle',
+        'Section' => 'SectionNumber',
+        'Teacher First Name' => 'TeacherFirstName',
+        'Teacher Last Name' => 'TeacherLastName'
     ];
 
     // AbstractConnector overrides
