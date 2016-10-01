@@ -53,6 +53,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         'section' => 'SectionNumber',
         'teacher first name' => 'TeacherFirstName',
         'teacher last name' => 'TeacherLastName',
+        'room' => 'Location',
 
         // new PCR fields
         'Semester' => 'SemesterNumber',
@@ -64,7 +65,8 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         'Department Name' => 'DepartmentTitle',
         'Section' => 'SectionNumber',
         'Teacher First Name' => 'TeacherFirstName',
-        'Teacher Last Name' => 'TeacherLastName'
+        'Teacher Last Name' => 'TeacherLastName',
+        'Room' => 'Location'
     ];
 
     public static $enrollmentColumns = [
