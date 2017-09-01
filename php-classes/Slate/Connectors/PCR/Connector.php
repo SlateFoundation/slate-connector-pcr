@@ -126,24 +126,24 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         if (!empty($Job->Config['studentsCsv'])) {
             $results['pull-students'] = static::pullStudents(
                 $Job,
-                $pretend,
-                SpreadsheetReader::createFromStream(fopen($Job->Config['studentsCsv'], 'r'))
+                SpreadsheetReader::createFromStream(fopen($Job->Config['studentsCsv'], 'r')),
+                $pretend
             );
         }
 
         if (!empty($Job->Config['sectionsCsv'])) {
             $results['pull-sections'] = static::pullSections(
                 $Job,
-                $pretend,
-                SpreadsheetReader::createFromStream(fopen($Job->Config['sectionsCsv'], 'r'))
+                SpreadsheetReader::createFromStream(fopen($Job->Config['sectionsCsv'], 'r')),
+                $pretend
             );
         }
 
         if (!empty($Job->Config['schedulesCsv'])) {
             $results['pull-enrollments'] = static::pullEnrollments(
                 $Job,
-                $pretend,
-                SpreadsheetReader::createFromStream(fopen($Job->Config['schedulesCsv'], 'r'))
+                SpreadsheetReader::createFromStream(fopen($Job->Config['schedulesCsv'], 'r')),
+                $pretend
             );
         }
 
@@ -180,7 +180,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         return $row;
     }
 
-    protected static function _applySectionChanges(Job $Job, Term $MasterTerm, Section $Section, array $row, array &$results)
+    protected static function _applySectionChanges(Job $Job, Term $MasterTerm, Section $Section, array $row)
     {
         if (!empty($row['SemesterNumber'])) {
             if (!$Term = Term::getByHandle('s'.substr($MasterTerm->Handle, 1).'-'.$row['SemesterNumber'])) {
@@ -214,6 +214,6 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
             }
         }
 
-        parent::_applySectionChanges($Job, $MasterTerm, $Section, $row, $results);
+        parent::_applySectionChanges($Job, $MasterTerm, $Section, $row);
     }
 }
