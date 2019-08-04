@@ -3,7 +3,7 @@
 namespace Slate\Connectors\PCR;
 
 use SpreadsheetReader;
-use Emergence\Connectors\Job;
+use Emergence\Connectors\IJob;
 use Emergence\Connectors\Exceptions\RemoteRecordInvalid;
 
 use Slate\Term;
@@ -103,7 +103,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         return $config;
     }
 
-    public static function synchronize(Job $Job, $pretend = true)
+    public static function synchronize(IJob $Job, $pretend = true)
     {
         if ($Job->Status != 'Pending' && $Job->Status != 'Completed') {
             return static::throwError('Cannot execute job, status is not Pending or Complete');
@@ -158,7 +158,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         return true;
     }
 
-    protected static function _readSection($Job, array $row)
+    protected static function _readSection(IJob $Job, array $row)
     {
         $row = parent::_readSection($Job, $row);
 
@@ -169,7 +169,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         return $row;
     }
 
-    protected static function _readEnrollment($Job, array $row)
+    protected static function _readEnrollment(IJob $Job, array $row)
     {
         $row = parent::_readEnrollment($Job, $row);
 
@@ -180,7 +180,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         return $row;
     }
 
-    protected static function _applySectionChanges(Job $Job, Term $MasterTerm, Section $Section, array $row)
+    protected static function _applySectionChanges(IJob $Job, Term $MasterTerm, Section $Section, array $row)
     {
         if (!empty($row['SemesterNumber'])) {
             if (!$Term = Term::getByHandle('s'.substr($MasterTerm->Handle, 1).'-'.$row['SemesterNumber'])) {
